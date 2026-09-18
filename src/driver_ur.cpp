@@ -111,6 +111,12 @@ int communication_thread_loop(std::shared_ptr<UrDriver> ur_driver,
                         throw std::runtime_error(error_msg);
                     }
                 }
+
+                if(ur_joint_information_manager->is_tool_gpio_enabled() && ur_joint_information_manager->is_current_tool_gpio_valid())
+                {
+                    ur_driver->getRTDEWriter().sendToolDigitalOutput(0, std::get<0>(ur_joint_information_manager->get_current_tool_gpio()));
+                    ur_driver->getRTDEWriter().sendToolDigitalOutput(1, std::get<1>(ur_joint_information_manager->get_current_tool_gpio()));
+                }
             }
             else
             {
