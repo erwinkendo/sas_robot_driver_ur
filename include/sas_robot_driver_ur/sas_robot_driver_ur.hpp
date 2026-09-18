@@ -22,6 +22,12 @@
 #   Author: Murilo M. Marinho, email: murilomarinho@ieee.org
 #   Based on sas_robot_driver_denso.h
 #
+# ################################################################
+# Contributors:
+#
+#   1. Erwin Lopez (erwin.lopez@manchester.ac.uk)
+#      Added functionality to control tool gpio
+#
 # ################################################################*/
 
 #include <atomic>
@@ -52,6 +58,7 @@ struct RobotDriverURConfiguration
 
     bool turn_robot_off_on_connect = true;
     bool turn_robot_off_on_disconnect = true;
+    bool tool_gpio_enable = false;
 };
 
 class RobotDriverUR: public RobotDriver
@@ -88,6 +95,18 @@ public:
      * @return Vector3d [Mx, My, Mz], given in the robot's base frame.
      */
     VectorXd get_tcp_torque();
+
+    /**
+     * @brief Get the current tool GPIO status.
+     * @return std::array<bool, 2> representing the GPIO states.
+     */
+    std::array<bool, 2> get_tool_gpio() override;
+
+    /**
+     * @brief Set the tool GPIO status.
+     * @param tool_gpio std::array<bool, 2> representing the GPIO states to set.
+     */
+    void set_tool_gpio(const std::array<bool, 2>& tool_gpio) override;
 
     void connect() override;
     void disconnect() override;
