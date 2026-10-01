@@ -73,7 +73,7 @@ public:
     urcl::vector6d_t get_current_tcp_force();
 
     void set_tool_gpio_enabled(const bool tool_gpio_enabled);
-    
+
     void set_current_tool_gpio(const std::array<bool, 2>& tool_gpio);
     std::array<bool, 2> get_current_tool_gpio();
 
