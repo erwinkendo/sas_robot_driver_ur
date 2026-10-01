@@ -29,6 +29,7 @@
 # ################################################################*/
 #pragma once
 #include <ur_client_library/types.h>
+#include <array>
 #include <mutex>
 
 namespace sas
@@ -55,6 +56,7 @@ private:
     bool tool_gpio_enabled_{false};
 
     bool current_tool_gpio_valid_{false};
+    bool current_tool_gpio_pending_{false};
     std::array<bool, 2> current_tool_gpio_{};
     std::mutex mutex_current_tool_gpio_;
 public:
@@ -76,6 +78,7 @@ public:
 
     void set_current_tool_gpio(const std::array<bool, 2>& tool_gpio);
     std::array<bool, 2> get_current_tool_gpio();
+    bool take_pending_tool_gpio(std::array<bool, 2>& tool_gpio);
 
     bool is_current_joint_position_valid()
     {
@@ -100,11 +103,6 @@ public:
     bool is_tool_gpio_enabled()
     {
         return tool_gpio_enabled_;
-    }
-
-    bool is_current_tool_gpio_valid()
-    {
-        return current_tool_gpio_valid_;
     }
 };
 }

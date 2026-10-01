@@ -96,14 +96,16 @@ public:
     Eigen::VectorXd get_tcp_torque();
 
     /**
-     * @brief Get the current tool GPIO status.
-     * @return std::array<bool, 2> representing the GPIO states.
+     * @brief Get the last commanded tool digital output values.
+     * @note This is the value most recently passed to set_tool_gpio(), not a read-back from the robot.
+     * @return std::array<bool, 2> with the commanded value of tool digital outputs 0 and 1.
      */
     std::array<bool, 2> get_tool_gpio() override;
 
     /**
-     * @brief Set the tool GPIO status.
-     * @param tool_gpio std::array<bool, 2> representing the GPIO states to set.
+     * @brief Command the tool digital outputs.
+     * @note The value is written to the robot over RTDE only when it differs from the previous command.
+     * @param tool_gpio std::array<bool, 2> with the desired value of tool digital outputs 0 and 1.
      */
     void set_tool_gpio(const std::array<bool, 2>& tool_gpio) override;
 

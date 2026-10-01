@@ -68,13 +68,27 @@ void sas::URJointInformationManager::set_tool_gpio_enabled(const bool tool_gpio_
 void sas::URJointInformationManager::set_current_tool_gpio(const std::array<bool, 2> &tool_gpio)
 {
     std::scoped_lock lock(mutex_current_tool_gpio_);
-    if(!is_current_tool_gpio_valid())
+    // Only flag a new value to be written to the robot when it changes (or on the first call).
+    if(!current_tool_gpio_valid_ || current_tool_gpio_ != tool_gpio)
+    {
+        current_tool_gpio_ = tool_gpio;
         current_tool_gpio_valid_ = true;
-    current_tool_gpio_ = tool_gpio;
+        current_tool_gpio_pending_ = true;
+    }
 }
 
 std::array<bool, 2> sas::URJointInformationManager::get_current_tool_gpio()
 {
     std::scoped_lock lock(mutex_current_tool_gpio_);
     return current_tool_gpio_;
+}
+
+bool sas::URJointInformationManager::take_pending_tool_gpio(std::array<bool, 2> &tool_gpio)
+{
+    std::scoped_lock lock(mutex_current_tool_gpio_);
+    if(!current_tool_gpio_pending_)
+        return false;
+    tool_gpio = current_tool_gpio_;
+    current_tool_gpio_pending_ = false;
+    return true;
 }
